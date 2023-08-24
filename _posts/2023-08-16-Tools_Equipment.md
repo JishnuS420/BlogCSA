@@ -10,7 +10,6 @@ type: hacks
 
 ## Hacks
 > Complete the procedure below accurately.  These are absolutely required and must be 100% accurate for your success.
-
 ### GitHub Account
 - Follow instruction [https://docs.github.com/en/get-started/signing-up-for-github/signing-up-for-a-new-github-account](https://docs.github.com/en/get-started/signing-up-for-github/signing-up-for-a-new-github-account)  Use your own personal/permanent email... NOT SCHOOL!!! GitHub account belongs to you.
 
