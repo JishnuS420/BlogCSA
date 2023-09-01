@@ -1,7 +1,7 @@
 <header class="site-header">
 
   <div id="header">
-    <img src="ufo.png" alt="Floating Image" class="floating-image">
+    <img src="!{{site.baseurl}}/ufo.png" alt="Floating Image" class="floating-image">
     <nav>
       <ul>
         <li class="fork"><a href="{{site.baseurl}}/">Home</a></li>
@@ -46,12 +46,22 @@
   }
 
   #header .floating-image {
-    position: absolute;
-    top: 50%;
-    left: 20px;
-    transform: translate(0, -25%);
-    max-width: 250px;
-    max-height: 125px;
-    
+  position: absolute;
+  top: 50%;
+  left: 100px;
+  transform: translate(0, -50%);
+  max-width: 250px;
+  max-height: 125px;
+  animation: float 2s infinite alternate;
 }
+
+@keyframes float {
+    0% {
+        transform: translate(0, -25%); /* Start position */
+    }
+    100% {
+        transform: translate(0, -40%); /* End position (adjust as needed) */
+    }
+}
+
 </style>
