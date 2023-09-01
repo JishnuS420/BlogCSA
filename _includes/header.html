@@ -1,6 +1,7 @@
 <header class="site-header">
 
   <div id="header">
+    <img src="ufo.png" alt="Floating Image" class="floating-image">
     <nav>
       <ul>
         <li class="fork"><a href="{{site.baseurl}}/">Home</a></li>
@@ -43,4 +44,14 @@
     background: linear-gradient(rgb(221, 170, 215), #F3CFC6); /* Color change on hover */
     color: black; /* Text color change on hover */
   }
+
+  #header .floating-image {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translate(0, -25%);
+    max-width: 250px;
+    max-height: 125px;
+    
+}
 </style>

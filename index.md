@@ -3,7 +3,6 @@ layout: default
 title: Student Blog
 ---
 
-
 ## Jishnu's Blog for Computer Science "A"
 Welcome to my personal lab notebook for this year of Computer Science "A"
 
