@@ -1,0 +1,80 @@
+---
+layout: default
+title: JavaScript Input and Output with API
+---
+<html>
+<head>
+    <title>Sentiment Analysis</title>
+</head>
+<body>
+    <h1>Sentiment Analyzer</h1>
+    <label for="textInput">Enter text for sentiment analysis:</label>
+    <input type="text" id="textInput">
+    <button id="analyzeButton">Analyze</button>
+    
+    <!-- Add a div element to display the output -->
+    <div id="output"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Function to handle the AJAX request
+        function performSentimentAnalysis(text) {
+            const settings = {
+                async: true,
+                crossDomain: true,
+                url: 'https://sentiment-analysis40.p.rapidapi.com/api/sentiment',
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'X-RapidAPI-Key': '48e23c6bf3msh9a6baf3e68d9a4ep14546ajsn1a39e98c4ad5',
+                    'X-RapidAPI-Host': 'sentiment-analysis40.p.rapidapi.com'
+                },
+                processData: false,
+                data: JSON.stringify({
+                    "language": "en",
+                    "text": text
+                })
+            };
+
+            // Send the AJAX request
+            $.ajax(settings)
+                .done(function (response) {
+                    console.log(response);
+                    // Extract relevant information from the JSON response
+                    const outputDiv = document.getElementById("output");
+
+                    // Check if the response contains the "result" object
+                    if (response && response.result) {
+                        const sentimentLabel = response.result.label;
+                        const sentimentScore = response.result.score;
+                        outputDiv.textContent = "Sentiment Label: " + sentimentLabel + "\nSentiment Score: " + sentimentScore;
+                    } else {
+                        outputDiv.textContent = "Unable to parse the response.";
+                    }
+                })
+                .fail(function (error) {
+                    console.error("Error:", error);
+                    // Handle errors here
+                    const outputDiv = document.getElementById("output");
+                    outputDiv.textContent = "Error occurred during sentiment analysis.";
+                });
+        }
+
+        // Get references to the input and button elements
+        const textInput = document.getElementById("textInput");
+        const analyzeButton = document.getElementById("analyzeButton");
+
+        // Attach a click event listener to the button
+        analyzeButton.addEventListener("click", function () {
+            const userInput = textInput.value;
+            if (userInput) {
+                performSentimentAnalysis(userInput);
+            } else {
+                console.log("No input provided.");
+                const outputDiv = document.getElementById("output");
+                outputDiv.textContent = "Please enter some text for sentiment analysis.";
+            }
+        });
+    </script>
+</body>
+</html>
