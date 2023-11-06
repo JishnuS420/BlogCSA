@@ -5,6 +5,7 @@ description: A pretty advanced use of JavaScript building classic snake game usi
 permalink: /frontend/snake
 categories: [C4.9]
 tags: [javascript]
+courses: {csa: {week: 2} }
 type: hacks
 ---
 

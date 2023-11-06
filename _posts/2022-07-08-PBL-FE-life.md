@@ -4,6 +4,7 @@ layout: post
 description: A remix of Conway's game of life using timer, onclick and algorithms.
 permalink: /frontend/life
 tags: [javascript]
+courses: {csa: {week: 2} }
 hacks: type
 ---
 

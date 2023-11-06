@@ -1,0 +1,21 @@
+---
+toc: true
+comments: true
+layout: post
+title: Week 0 Plans
+description: This is my plans for week 0
+type: plans
+courses: {csa: {week: 0} }
+categories: [C1.4]
+---
+# Plans for this week
+### Monday 
+- On Monday, me and Drew are going to be scheduling our review for the week on: Thursday, and we will work on make sure that the things that we created to show our understanding of CSS, HTML, and Javascript
+### Tuesday 
+- On Tuesday, me and Drew will still be fixing any problems that we have with each other's machines and we will try to experiment with the Java kernel and try to install it and mess around with it.
+### Wednesday
+- On Wednesday me and Drew will be reviewing to make sure that we have everything that we need for the review and I will be experimenting with the different elements of the website and customize it to make it more personal
+### Thursday
+- On Thursday, me and Drew will be finishing up the review for this week and try to work with Java after we finish the review and fix any errors that are still ongoing 
+### Friday
+- On Friday, me and Drew will be reviewing the things for next week and we will be trying to get a head start on some of the things that we need done next week and we will spend the day working on our own individual blogs 
