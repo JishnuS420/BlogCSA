@@ -1,0 +1,95 @@
+---
+layout: default
+title: JSCharting Graph Example for Fibonacci
+---
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
+
+<div style="height: 650px;">
+    <div id="chartDiv" style="max-width: 640px; height: 650px; margin: 0 auto;">
+    </div>
+</div>
+
+<script>
+    var chart = JSC.chart('chartDiv', { 
+        debug: true, 
+        type: 'horizontal column solid', 
+        title_label: { 
+            text: 'Time took to Run each Fibonacci Method',
+            style_fontWeight: 'bold',
+            position: 'top middle',
+            style_fontSize: 16 
+        }, 
+        annotations: [ 
+            { 
+                label_text: '*Test Graph*', 
+                asHTML: true, 
+                position: 'bottom right'
+            } 
+        ], 
+        legend_visible: true, 
+        legend_template: "%icon %name",
+        yAxis: { 
+            scale_range: { padding: 0.1, min: 0 }, 
+            orientation: 'opposite',
+            label_text: "Method",
+            label_style_fontWeight: 'bold'
+        }, 
+        xAxis: { 
+            defaultTick_label_width: 100, 
+            label_text: "Time",
+            label_style_fontWeight: 'bold',
+            crosshair: { 
+                enabled: true, 
+                gridLine_visible: false, 
+                outline_width: 0, 
+                label_style_fontWeight: 'bold'
+            } 
+        }, 
+        defaultSeries_palette: 'default', 
+        defaultPoint: { 
+            outline_width: 0, 
+            tooltip: '<b>%yValue</b>', 
+        }, 
+        defaultTooltip_label_text: '%points', 
+        series: makeSeries(getData()) 
+    }); 
+  
+    function makeSeries(data) { 
+        return [ 
+            { 
+                points: data.map(function(item) { 
+                    return { 
+                        name: item.type, 
+                        y: item.value, 
+                        method: item.name
+                    }; 
+                }) 
+            } 
+        ]; 
+    } 
+  
+    function getData() { 
+        return [ 
+            { 
+                type: 'Fibonacci (For)',
+                name: 'For',
+                value: 1834, 
+            }, 
+            { 
+                type: 'Fibonacci (While)',
+                name: 'While',
+                value: 1490, 
+            }, 
+            { 
+                type: 'Fibonacci (Recursion)',
+                name: 'Recursion',
+                value: 7293, 
+            }, 
+            { 
+                type: 'Fibonacci (Stream)',
+                name: 'Stream',
+                value: 34067, 
+            }
+        ]; 
+    } 
+</script>
