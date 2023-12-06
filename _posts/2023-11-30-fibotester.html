@@ -1,0 +1,196 @@
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
+
+<div style="height: 650px;">
+    <div id="chartDiv" style="max-width: 640px; height: 650px; margin: 0 auto;">
+    </div>
+    <div class="container">
+        <label for="numberInput">Enter a number:</label>
+        <input type="number" id="numberInput" placeholder="Enter a number">
+        <button id="calculateButton" onclick="read_pull()">Calculate Fibonacci</button>
+            <table>
+                <tr>
+                <th>Method</th>
+                <th>Time Taken (nanoseconds)</th>
+                <th>Array</th>
+                </tr>
+                <tr>
+                <td>For Loop</td>
+                <td>10805.0</td>
+                <td>[0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229,832040,1346269,2178309,3524578,5702887,9227465,14930352,24157817,39088169,63245986,102334155,165580141,267914296,433494437,701408733,1134903170,1836311903,2971215073,4807526976,7778742049,12586269025,20365011074,32951280099,53316291173,86267571272,139583862445,225851433717,365435296162,591286729879,956722026041]</td>
+                </tr>
+                <tr>
+                    <td>While Loop</td>
+                    <td>9213.0</td>
+                    <td>[0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229,832040,1346269,2178309,3524578,5702887,9227465,14930352,24157817,39088169,63245986,102334155,165580141,267914296,433494437,701408733,1134903170,1836311903,2971215073,4807526976,7778742049,12586269025,20365011074,32951280099,53316291173,86267571272,139583862445,225851433717,365435296162,591286729879,956722026041]</td>
+                </tr>
+                <tr>
+                    <td>Recursion Loop</td>
+                    <td>12920.0</td>
+                    <td>[0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229,832040,1346269,2178309,3524578,5702887,9227465,14930352,24157817,39088169,63245986,102334155,165580141,267914296,433494437,701408733,1134903170,1836311903,2971215073,4807526976,7778742049,12586269025,20365011074,32951280099,53316291173,86267571272,139583862445,225851433717,365435296162,591286729879,956722026041]</td>
+                </tr>
+                <tr>
+                    <td>Stream Loop</td>
+                    <td>112995.0</td>
+                    <td>[0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229,832040,1346269,2178309,3524578,5702887,9227465,14930352,24157817,39088169,63245986,102334155,165580141,267914296,433494437,701408733,1134903170,1836311903,2971215073,4807526976,7778742049,12586269025,20365011074,32951280099,53316291173,86267571272,139583862445,225851433717,365435296162,591286729879,956722026041]</td>
+                </tr>
+            </table>
+    </div>
+</div>
+
+<script>
+    var chart = JSC.chart('chartDiv', { 
+        debug: true, 
+        type: 'horizontal column solid', 
+        title_label: { 
+            text: 'Time took to Run each Fibonacci Method',
+            style_fontWeight: 'bold',
+            position: 'top middle',
+            style_fontSize: 16 
+        }, 
+        annotations: [ 
+            { 
+                label_text: '*Test Graph*', 
+                asHTML: true, 
+                position: 'bottom right'
+            } 
+        ], 
+        legend_visible: true, 
+        legend_template: "%icon %name",
+        yAxis: { 
+            scale_range: { padding: 0.1, min: 0 }, 
+            orientation: 'opposite',
+            label_text: "Method",
+            label_style_fontWeight: 'bold'
+        }, 
+        xAxis: { 
+            defaultTick_label_width: 100, 
+            label_text: "Time",
+            label_style_fontWeight: 'bold',
+            crosshair: { 
+                enabled: true, 
+                gridLine_visible: false, 
+                outline_width: 0, 
+                label_style_fontWeight: 'bold'
+            } 
+        }, 
+        defaultSeries_palette: 'default', 
+        defaultPoint: { 
+            outline_width: 0, 
+            tooltip: '<b>%yValue</b>', 
+        }, 
+        defaultTooltip_label_text: '%points', 
+        series: makeSeries(getData()) 
+    }); 
+  
+    function makeSeries(data) { 
+        return [ 
+            { 
+                points: data.map(function(item) { 
+                    return { 
+                        name: item.type, 
+                        y: item.value, 
+                        method: item.name
+                    }; 
+                }) 
+            } 
+        ]; 
+    } 
+  
+    function getData() { 
+        return [ 
+            { 
+                type: 'Fibonacci (For)',
+                name: 'For',
+                value: 10805.0, 
+            }, 
+            { 
+                type: 'Fibonacci (While)',
+                name: 'While',
+                value: 9213.0, 
+            }, 
+            { 
+                type: 'Fibonacci (Recursion)',
+                name: 'Recursion',
+                value: 12920.0, 
+            }, 
+            { 
+                type: 'Fibonacci (Stream)',
+                name: 'Stream',
+                value: 112995.0, 
+            }
+        ]; 
+    } 
+</script>
+
+<script>
+const base_url = "http://localhost:8799/api/fibonacci/";
+
+function read_pull() {
+    // Replace '10' with the dynamic value that the user provides
+    const userFiboInput = document.getElementById("numberInput").value;
+    console.log(userFiboInput);
+
+    // set options for cross-origin header request
+    const authOptions = {
+        method: 'GET', // GET request
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+        // credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    // fetch the API for the for loop
+    fetch(base_url + "for/" + userFiboInput, authOptions)
+        .then(response => {
+            if (response.status !== 200) {
+                const errorMsg = 'Database response error: ' + response.status;
+                console.log(errorMsg);
+                return;
+            }
+            response.json().then(data => {
+                console.log("Results for 'for' loop:", data);
+            });
+        });
+
+    // fetch the API for the while loop
+    fetch(base_url + "while/" + userFiboInput, authOptions)
+        .then(response => {
+            if (response.status !== 200) {
+                const errorMsg = 'Database response error: ' + response.status;
+                console.log(errorMsg);
+                return;
+            }
+            response.json().then(data => {
+                console.log("Results for 'while' loop:", data);
+            });
+        });
+
+    // fetch the API for the recursion loop
+    fetch(base_url + "recursion/" + userFiboInput, authOptions)
+        .then(response => {
+            if (response.status !== 200) {
+                const errorMsg = 'Database response error: ' + response.status;
+                console.log(errorMsg);
+                return;
+            }
+            response.json().then(data => {
+                console.log("Results for 'recursion' loop:", data);
+            });
+        });
+
+    // fetch the API for "stream" loop
+    fetch(base_url + "stream/" + userFiboInput, authOptions)
+        .then(response => {
+            if (response.status !== 200) {
+                const errorMsg = 'Database response error: ' + response.status;
+                console.log(errorMsg);
+                return;
+            }
+            response.json().then(data => {
+                console.log("Results for 'stream' loop:", data);
+            });
+        });
+}
+</script>
