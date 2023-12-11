@@ -7,33 +7,66 @@
         <label for="numberInput">Enter a number:</label>
         <input type="number" id="numberInput" placeholder="Enter a number">
         <button id="calculateButton" onclick="read_pull()">Calculate Fibonacci</button>
-            <table>
-                <tr>
-                <th>Method</th>
-                <th>Time Taken (nanoseconds)</th>
-                <th>Array</th>
-                </tr>
-                <tr>
-                <td>For Loop</td>
-                <td>10805.0</td>
-                <td>[0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229,832040,1346269,2178309,3524578,5702887,9227465,14930352,24157817,39088169,63245986,102334155,165580141,267914296,433494437,701408733,1134903170,1836311903,2971215073,4807526976,7778742049,12586269025,20365011074,32951280099,53316291173,86267571272,139583862445,225851433717,365435296162,591286729879,956722026041]</td>
-                </tr>
-                <tr>
-                    <td>While Loop</td>
-                    <td>9213.0</td>
-                    <td>[0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229,832040,1346269,2178309,3524578,5702887,9227465,14930352,24157817,39088169,63245986,102334155,165580141,267914296,433494437,701408733,1134903170,1836311903,2971215073,4807526976,7778742049,12586269025,20365011074,32951280099,53316291173,86267571272,139583862445,225851433717,365435296162,591286729879,956722026041]</td>
-                </tr>
-                <tr>
-                    <td>Recursion Loop</td>
-                    <td>12920.0</td>
-                    <td>[0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229,832040,1346269,2178309,3524578,5702887,9227465,14930352,24157817,39088169,63245986,102334155,165580141,267914296,433494437,701408733,1134903170,1836311903,2971215073,4807526976,7778742049,12586269025,20365011074,32951280099,53316291173,86267571272,139583862445,225851433717,365435296162,591286729879,956722026041]</td>
-                </tr>
-                <tr>
-                    <td>Stream Loop</td>
-                    <td>112995.0</td>
-                    <td>[0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229,832040,1346269,2178309,3524578,5702887,9227465,14930352,24157817,39088169,63245986,102334155,165580141,267914296,433494437,701408733,1134903170,1836311903,2971215073,4807526976,7778742049,12586269025,20365011074,32951280099,53316291173,86267571272,139583862445,225851433717,365435296162,591286729879,956722026041]</td>
-                </tr>
-            </table>
+        <title>Live Updating Table</title>
+        <style>
+          table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px;
+          }
+      
+          table, th, td {
+            border: 1px solid black;
+          }
+      
+          th, td {
+            padding: 10px;
+            text-align: left;
+          }
+      
+          th {
+            background-color: #f2f2f2;
+          }
+        </style>
+      </head>
+      <body>
+      
+      <table id="loopTable">
+        <thead>
+          <tr>
+            <th>Name of Loop</th>
+            <th>Time Taken</th>
+            <th>Steps Taken</th>
+            <th>Final Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>For Loop</td>
+            <td id="forLoopTime">-</td>
+            <td id="forLoopSteps">-</td>
+            <td id="forLoopResult">-</td>
+          </tr>
+          <tr>
+            <td>While Loop</td>
+            <td id="whileLoopTime">-</td>
+            <td id="whileLoopSteps">-</td>
+            <td id="whileLoopResult">-</td>
+          </tr>
+          <tr>
+            <td>Recursion Loop</td>
+            <td id="recursionLoopTime">-</td>
+            <td id="recursionLoopSteps">-</td>
+            <td id="recursionLoopResult">-</td>
+          </tr>
+          <tr>
+            <td>Stream Loop</td>
+            <td id="streamLoopTime">-</td>
+            <td id="streamLoopSteps">-</td>
+            <td id="streamLoopResult">-</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 </div>
 
@@ -141,56 +174,30 @@ function read_pull() {
         },
     };
 
-    // fetch the API for the for loop
+    // Fetch data for the "for" loop
     fetch(base_url + "for/" + userFiboInput, authOptions)
-        .then(response => {
-            if (response.status !== 200) {
-                const errorMsg = 'Database response error: ' + response.status;
-                console.log(errorMsg);
-                return;
-            }
-            response.json().then(data => {
-                console.log("Results for 'for' loop:", data);
-            });
-        });
+      .then(response => response.json())
+      .then(data => updateTableRow("forLoop", data));
 
-    // fetch the API for the while loop
+    // Fetch data for the "while" loop
     fetch(base_url + "while/" + userFiboInput, authOptions)
-        .then(response => {
-            if (response.status !== 200) {
-                const errorMsg = 'Database response error: ' + response.status;
-                console.log(errorMsg);
-                return;
-            }
-            response.json().then(data => {
-                console.log("Results for 'while' loop:", data);
-            });
-        });
+      .then(response => response.json())
+      .then(data => updateTableRow("whileLoop", data));
 
-    // fetch the API for the recursion loop
+    // Fetch data for the "recursion" loop
     fetch(base_url + "recursion/" + userFiboInput, authOptions)
-        .then(response => {
-            if (response.status !== 200) {
-                const errorMsg = 'Database response error: ' + response.status;
-                console.log(errorMsg);
-                return;
-            }
-            response.json().then(data => {
-                console.log("Results for 'recursion' loop:", data);
-            });
-        });
+      .then(response => response.json())
+      .then(data => updateTableRow("recursionLoop", data));
 
-    // fetch the API for "stream" loop
+    // Fetch data for the "stream" loop
     fetch(base_url + "stream/" + userFiboInput, authOptions)
-        .then(response => {
-            if (response.status !== 200) {
-                const errorMsg = 'Database response error: ' + response.status;
-                console.log(errorMsg);
-                return;
-            }
-            response.json().then(data => {
-                console.log("Results for 'stream' loop:", data);
-            });
-        });
-}
+      .then(response => response.json())
+      .then(data => updateTableRow("streamLoop", data));
+  }
+
+  function updateTableRow(loopName, data) {
+    document.getElementById(loopName + "Time").textContent = data.timeTaken;
+    document.getElementById(loopName + "Steps").textContent = data.intermediateSteps;
+    document.getElementById(loopName + "Result").textContent = data.fibonacciNumbers;
+  }
 </script>
