@@ -115,44 +115,38 @@
         series: makeSeries(getData()) 
     }); 
   
-    function makeSeries(data) { 
-        return [ 
-            { 
-                points: data.map(function(item) { 
-                    return { 
-                        name: item.type, 
-                        y: item.value, 
-                        method: item.name
-                    }; 
-                }) 
-            } 
-        ]; 
-    } 
-  
-    function getData() { 
-        return [ 
-            { 
-                type: 'Fibonacci (For)',
-                name: 'For',
-                value: 10805.0, 
-            }, 
-            { 
-                type: 'Fibonacci (While)',
-                name: 'While',
-                value: 9213.0, 
-            }, 
-            { 
-                type: 'Fibonacci (Recursion)',
-                name: 'Recursion',
-                value: 12920.0, 
-            }, 
-            { 
-                type: 'Fibonacci (Stream)',
-                name: 'Stream',
-                value: 112995.0, 
-            }
-        ]; 
-    } 
+    var chartData = getData();
+
+function makeSeries(data) {
+  return [
+    {
+      points: data.map(function (item) {
+        return {
+          name: item.type,
+          y: item.value,
+          method: item.name
+        };
+      })
+    }
+  ];
+}
+
+function updateChart(newData) {
+  // Update existing data with new data
+  chartData = chartData.concat(newData);
+
+  // Update chart series with the new data
+  chart.options({ series: makeSeries(chartData) });
+
+  // Redraw the chart
+  chart.update('modify', 'refresh');
+}
+
+function getData() {
+  return [
+
+  ];
+}
 </script>
 
 <script>
@@ -199,5 +193,13 @@ function read_pull() {
     document.getElementById(loopName + "Time").textContent = data.timeTaken;
     document.getElementById(loopName + "Steps").textContent = data.intermediateSteps;
     document.getElementById(loopName + "Result").textContent = data.fibonacciNumbers;
+  
+    updateChart([
+      {
+        type: 'Fibonacci (' + loopName + ')',
+        name: loopName,
+        value: data.timeTaken,
+      }
+      ]);
   }
 </script>
