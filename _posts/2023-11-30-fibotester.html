@@ -7,7 +7,7 @@
         <label for="numberInput">Enter a number:</label>
         <input type="number" id="numberInput" placeholder="Enter a number">
         <button id="calculateButton" onclick="read_pull()">Calculate Fibonacci</button>
-        <title>Live Updating Table</title>
+        <title>Fibonacci - Live Updating Table</title>
         <style>
           table {
             border-collapse: collapse;
@@ -80,13 +80,6 @@
             position: 'top middle',
             style_fontSize: 16 
         }, 
-        annotations: [ 
-            { 
-                label_text: '*Test Graph*', 
-                asHTML: true, 
-                position: 'bottom right'
-            } 
-        ], 
         legend_visible: true, 
         legend_template: "%icon %name",
         yAxis: { 
@@ -138,7 +131,7 @@ function updateChart(newData) {
   // Update chart series with the new data
   chart.options({ series: makeSeries(chartData) });
 
-  // Redraw the chart
+  // Redraw the chart and refresh the page 
   chart.update('modify', 'refresh');
 }
 
@@ -153,15 +146,14 @@ function getData() {
 const base_url = "http://localhost:8799/api/fibonacci/";
 
 function read_pull() {
-    // Replace '10' with the dynamic value that the user provides
     const userFiboInput = document.getElementById("numberInput").value;
     console.log(userFiboInput);
 
-    // set options for cross-origin header request
+
     const authOptions = {
-        method: 'GET', // GET request
-        mode: 'cors', // no-cors, *cors, same-origin
-        cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+        method: 'GET', // GET request 
+        mode: 'cors', // no-cors, cors, same-origin
+        cache: 'default', // default, no-cache, reload, force-cache, only-if-cached
         // credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
@@ -190,7 +182,7 @@ function read_pull() {
   }
 
   function updateTableRow(loopName, data) {
-    document.getElementById(loopName + "Time").textContent = data.timeTaken;
+    document.getElementById(loopName + "Time").textContent = data.timeTaken; // Get the document element on the table above and replace it with the data collected from the fetch
     document.getElementById(loopName + "Steps").textContent = data.intermediateSteps;
     document.getElementById(loopName + "Result").textContent = data.fibonacciNumbers;
   
