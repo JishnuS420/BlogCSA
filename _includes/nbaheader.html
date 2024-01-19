@@ -1,0 +1,82 @@
+<header class="site-header">
+
+    <div id="header">
+      <img src="nba.png" alt="Floating Image" class="floating-image">
+      <nav>
+        <ul>
+          <li class="fork"><a href="{{site.baseurl}}/2024/01/17/signin.html">Sign In</a></li>
+          <li class="fork"><a href="{{site.baseurl}}/2024/01/18/signup.html">Sign Up</a></li>
+          <li class="fork"><a href="{{site.baseurl}}/">Homepage</a></li>
+          <li class="title"><a href="{{ site.github.repository_url }}#readme">View On GitHub</a></li>
+        </ul>
+      </nav>
+    </div><!-- end header -->
+  </header>
+  
+  <style>
+    #header {
+      z-index: 100;
+      left: 0;
+      top: 0px;
+      height: 60px;
+      width: 100%;
+      position: fixed;
+      background: #FFFFED;
+      border-bottom: 4px solid #ffffede8;
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+      display: flex; /* Use flexbox for centering */
+    align-items: center; /* Center items vertically */
+    justify-content: space-evenly;
+    }
+  
+    #header nav ul {
+      display: flex; /* Use flexbox for the list container */
+      justify-content: space-evenly; /* Distribute items evenly */
+      align-items: center; /* Align items vertically in the center */
+      list-style-type: none; /* Remove default list styling */
+      padding: 0; /* Remove default padding */
+      margin: 0; /* Remove default margin */
+    }
+  
+    #header nav ul li {
+      display: inline-block;
+      margin: 0;
+    }
+  
+    #header nav ul li a {
+      color: black;
+      border: 1px solid #FFFFED;
+      background: linear-gradient(#FFFFED, #ffffede8);
+      border-radius: 2px;
+      box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0px 3px 7px rgba(0, 0, 0, 0.7);
+      background-color: #FFFFED;
+      padding: 10px 12px;
+      line-height: 14px;
+      font-size: 14px;
+      text-align: center;
+    }
+  
+    #header nav ul li a:hover {
+      background: linear-gradient(#cc8080, #d35c5c);
+      color: black;
+    }
+  
+    #header .floating-image {
+      position: absolute;
+      top: 50%;
+      left: 100px;
+      transform: translate(0, -50%);
+      max-width: 250px;
+      max-height: 125px;
+      animation: float 2s infinite alternate;
+    }
+  
+    @keyframes float {
+      0% {
+        transform: translate(0, -25%);
+      }
+      100% {
+        transform: translate(0, -40%);
+      }
+    }
+  </style>
