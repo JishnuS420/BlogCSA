@@ -32,15 +32,15 @@
     </section>
     <script>
         let currentField = "nameInput";
-        const login_url = "http://localhost:8085/authenticate";
+        const login_url = "http://localhost:8062/authenticate";
         // prepare URL
         //var url = "https://spring.nighthawkcodingsociety.com/api/person/";
         // Uncomment next line for localhost testing
-        const read_url = "http://localhost:8085/api/person/";
+        const read_url = "http://localhost:8062/api/person/";
         //var url = "https://spring.nighthawkcodingsociety.com/api/person/";
         // Uncomment next line for localhost testing
-        const post_url = "http://localhost:8085/api/person/post";
-        const put_url = "http://localhost:8085/api/person/update";
+        const post_url = "http://localhost:8062/api/person/create";
+        const put_url = "http://localhost:8062/api/person/update";
         function create_user(event) {
             event.preventDefault();
             const createBody = {
