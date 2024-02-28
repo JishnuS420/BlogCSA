@@ -1,3 +1,13 @@
+---
+toc: true
+comments: true
+layout: post
+title: Individual Review Pointers
+description: Trimester 2 blog for the Night at the Museum
+type: hacks
+courses: {csa: {week: 23} }
+---
+
 ### Learning from Grader:
 - One thing that I saw Ryan do that I found really interesting and wanted to implement going forward is for the connections, he actually really connected with the questions and the project, putting them in an order that makes sense and was fluid, it made the connections feel more personal rather than seemingly forced
 - Anther huge critique that Ryan made was that focus more on the things that college board wants to see and the knowledge that they are testing
