@@ -156,6 +156,10 @@
                         console.log(errorMsg);
                         return;
                     }
+
+                    if (response.status === 403) {
+                        console.log("You don't have the permission to authorize this resource!")
+                    }
                     // response.json().then(data => {
                     // // const jwtToken = data.jwt;
                     // // const email = emailInput.value;
