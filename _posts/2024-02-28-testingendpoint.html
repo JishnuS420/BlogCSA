@@ -1,0 +1,38 @@
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch API Example</title>
+</head>
+<body>
+  <button id="fetchButton">Fetch Data</button>
+
+  <script>
+    document.getElementById('fetchButton').addEventListener('click', fetchData);
+
+    function fetchData() {
+      fetch("https://api.balldontlie.io/v1/players/1", {
+        method: "GET",
+        headers: {
+          "Authorization": "2c2b2237-b386-4ec4-b310-ba6ad6df3679"
+        }
+      })
+      .then(response => {
+        // Handle response
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Log the data to the console
+        console.log(data);
+      })
+      .catch(error => {
+        // Handle error
+        console.error('There was a problem with your fetch operation:', error);
+      });
+    }
+  </script>
+</body>
+</html>
