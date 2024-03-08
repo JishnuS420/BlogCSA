@@ -4,7 +4,7 @@
         <div class="signin-box">
             <div class="signin-value">
                 <form id="signinForm" autocomplete="off">
-                    <h2>Sign In</h2>
+                    <h2>Sign In!</h2>
                     <div class="inputbox" id="emailField" style="display: block;">
                         <ion-icon name="mail-outline"></ion-icon>
                         <input type="email" id="emailInput" name="email" required>
@@ -26,17 +26,18 @@
             </div>
         </div>
     </section>
+</body>
 
-    <script>
-        const login_url = "http://localhost:8062/authenticate";
+<script>
+        const login_url = "http://localhost:8085/authenticate";
         // prepare URL
         //var url = "https://spring.nighthawkcodingsociety.com/api/person/";
         // Uncomment next line for localhost testing
-        const read_url = "http://localhost:8062/api/person/";
+        const read_url = "http://localhost:8085/api/person/";
         //var url = "https://spring.nighthawkcodingsociety.com/api/person/";
         // Uncomment next line for localhost testing
-        const post_url = "http://localhost:8062/api/person/post";
-        const put_url = "http://localhost:8062/api/person/update";
+        const post_url = "http://localhost:8085/api/person/post";
+        const put_url = "http://localhost:8085/api/person/update";
         let currentField = "emailField";
 
         // //
@@ -171,11 +172,9 @@
                     // fetch
                 })
                 };
-    </script>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</body>
-
+</script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <!-- Styles -->
 
 <style>
