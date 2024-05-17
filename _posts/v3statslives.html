@@ -1,0 +1,287 @@
+---
+layout: project
+---
+
+<head>
+    <!-- ApexCharting -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+
+<style>
+    #stockInfo {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    #stockInfo h2 {
+        font-size: 32px;
+        margin-bottom: 5px;
+    }
+
+    #stockPrice span {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    #stockVolume {
+        font-weight: bold;
+    }
+</style>
+
+<div class="hero 50vh">
+   
+</div>
+
+<div class="grid grid-cols-2 gap-4">
+    <div class="card shadow-xl">
+        <div class="card-body">
+            <input id="symbol" type="text" placeholder="ex. AAPL" class="input input-bordered w-full max-w-xs mb-4" />
+            <button onclick="getStockData()" class="btn">Get Monthly Data</button>
+            <div id="stockPrice"></div>
+            <div id="stockChart"></div>
+            <div id="stockVolume"></div>
+            <div id="lastRefreshed"></div>
+        </div>
+    </div>
+
+    <div class="card shadow-xl flex justify-center items-center">
+        <div class="card-body text-lg">
+            <div id="stockInfo"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+    // WebSocket URL
+    const socket = new WebSocket('wss://ws.finnhub.io?token=cogebo9r01qtg2rmbf9gcogebo9r01qtg2rmbfa0');
+
+    let prevPrice = null;
+
+    // Connection opened -> Subscribe
+    socket.addEventListener('open', function (event) {
+        console.log('WebSocket connection opened');
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+        const data = JSON.parse(event.data);
+        if (data.data) {
+            const { s: symbol, p: price, v: volume } = data.data[0]; // Extract symbol, price, and volume
+            updateStockData(symbol, price, volume);
+        }
+    });
+
+    // Function to update stock data based on WebSocket message
+    function updateStockData(symbol, price, volume) {
+        // Update stock price above graph
+        document.getElementById("stockPrice").innerHTML = `
+            <h2>Last Price: <span id="priceValue" class="text-3xl font-bold">${price}</span></h2>
+        `;
+
+        // Update stock volume below graph
+        document.getElementById("stockVolume").innerHTML = `
+            <h2>Volume: <span class="font-bold">${volume}</span></h2>
+        `;
+
+        // Compare with previous price and update color
+        const priceValue = document.getElementById("priceValue");
+        if (prevPrice !== null && price !== prevPrice) {
+            priceValue.style.color = price > prevPrice ? 'green' : 'red';
+        }
+
+        // Update previous price
+        prevPrice = price;
+    }
+
+    // Function to subscribe to a symbol
+    function subscribe(symbol) {
+        socket.send(JSON.stringify({'type': 'subscribe', 'symbol': symbol}));
+    }
+
+    // Function to unsubscribe from a symbol
+    function unsubscribe(symbol) {
+        socket.send(JSON.stringify({'type': 'unsubscribe', 'symbol': symbol}));
+    }
+
+    // Function to get monthly stock data
+    async function getStockData() {
+        const symbol = document.getElementById("symbol").value;
+
+        // Fetch real-time quote data from Finnhub API
+        const apiKey = 'cogebo9r01qtg2rmbf9gcogebo9r01qtg2rmbfa0';
+        const apiUrl = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`;
+
+        try {
+            const response = await axios.get(apiUrl);
+            const data = response.data;
+
+            // Display stock info
+            const changeColor = data.d > 0 ? 'green' : 'red';
+            document.getElementById("stockInfo").innerHTML = `
+                <h2><b>Stock Information</b></h2>
+                <ul>
+                    <li><b>Symbol:</b> ${symbol}</li>
+                    <li><b>Last Price:</b> ${data.c}</li>
+                    <li style="color: ${changeColor};"><b>Change (Today):</b> ${data.d} (${data.dp}%)</li>
+                    <li><b>High:</b> ${data.h}</li>
+                    <li><b>Low:</b> ${data.l}</li>
+                    <li><b>Open:</b> ${data.o}</li>
+                    <li><b>Previous Close:</b> ${data.pc}</li>
+                </ul>
+                <p><br> 
+                </p>
+                <button onclick="getAdditionalStockInfo()" class="btn">Get Additional Information</button>
+            `;
+        } catch (error) {
+            console.error(error);
+        }
+
+        // Subscribe to symbol for real-time updates
+        subscribe(symbol);
+
+        // Fetch monthly stock data from Alpha Vantage API and render chart
+        fetchMonthlyStockData(symbol);
+    }
+
+    // Function to fetch monthly stock data from Alpha Vantage API and render chart
+    async function fetchMonthlyStockData(symbol) {
+        const rapidApiKey = 'a96f7bb54emshee5a698b2344228p12bd6cjsnbb7e0177bdb6';
+        const rapidApiHost = 'alpha-vantage.p.rapidapi.com';
+        const url = `https://${rapidApiHost}/query?function=TIME_SERIES_MONTHLY&symbol=${symbol}&datatype=json&output_size=compact`;
+
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': rapidApiKey,
+                'X-RapidAPI-Host': rapidApiHost
+            }
+        };
+
+        try {
+            const response = await fetch(url, requestOptions);
+            const data = await response.json();
+
+            // Process stock data for chart
+            let seriesData = Object.keys(data['Monthly Time Series']).map(key => ({
+                x: new Date(key),
+                y: parseFloat(data['Monthly Time Series'][key]['4. close'])
+            }));
+
+            // Render chart using ApexCharts
+            renderStockChart(seriesData);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Function to render stock chart using ApexCharts
+    function renderStockChart(seriesData) {
+        var chartOptions = {
+            series: [{
+                name: 'Monthly Closed Stock Market Data',
+                data: seriesData
+            }],
+            chart: {
+                type: 'area',
+                stacked: false,
+                height: 350,
+                zoom: {
+                    type: 'x',
+                    enabled: true,
+                    autoScaleYaxis: true
+                },
+                toolbar: {
+                    autoSelected: 'zoom'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            markers: {
+                size: 0,
+            },
+            title: {
+                text: 'Stock Closed Price',
+                align: 'left'
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    inverseColors: false,
+                    opacityFrom: 0.5,
+                    opacityTo: 0,
+                    stops: [0, 90, 100]
+                },
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (val) {
+                        return (val).toFixed(2);
+                    },
+                },
+                title: {
+                    text: 'Price'
+                },
+            },
+            xaxis: {
+                type: 'datetime',
+            },
+            tooltip: {
+                shared: false,
+                x: {
+                    format: 'dd MMM yyyy'
+                },
+                y: {
+                    formatter: function (val) {
+                        return (val).toFixed(2);
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#stockChart"), chartOptions);
+        chart.render();
+    }
+
+    // Function to fetch additional stock information
+    async function getAdditionalStockInfo() {
+        const symbol = document.getElementById("symbol").value;
+
+        try {
+            // Fetch additional stock information using the Finnhub API
+            const additionalInfo = await getAdditionalStockInformation(symbol);
+            
+            // Display the additional stock information
+            document.getElementById("stockInfo").innerHTML += `
+                <h2><b>Additional Information</b></h2>
+                <ul>
+                    ${additionalInfo.map(info => `
+                        <li><b>Description:</b> ${info.description}</li>
+                        <li><b>Display Symbol:</b> ${info.displaySymbol}</li>
+                        <li><b>Type:</b> ${info.type}</li>
+                        <br>
+                    `).join('')}
+                </ul>
+            `;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Function to fetch additional stock information from the Finnhub API
+    function getAdditionalStockInformation(symbol) {
+        return new Promise((resolve, reject) => {
+            finnhubClient.symbolSearch(symbol, (error, data, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(data.result);
+                }
+            });
+        });
+    }
+
+</script>

@@ -1,0 +1,160 @@
+---
+layout: project
+---
+
+<head>
+    <!-- ApexCharting -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+
+<div class="hero 50vh">
+   
+</div>
+
+<div class="grid grid-cols-2 gap-4">
+    <div class="card shadow-xl">
+        <div class="card-body">
+            <input id="symbol" type="text" placeholder="ex. AAPL" class="input input-bordered w-full max-w-xs mb-4" />
+            <button onclick="getStockData()" class="btn">Get Monthly Data</button>
+            <div id="stockData"></div>
+            <div id="stockChart"></div>
+            <div id="lastRefreshed"></div>
+        </div>
+    </div>
+
+    <div class="card shadow-xl flex justify-center items-center">
+        <div class="card-body text-lg">
+            <div id="stockInfo"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // Monthly stock data from the alpha vantage API in RapidAPI
+
+    const rapidApiKey = 'a96f7bb54emshee5a698b2344228p12bd6cjsnbb7e0177bdb6';
+    const rapidApiHost = 'alpha-vantage.p.rapidapi.com';
+
+    async function getStockData() {
+        const symbol = document.getElementById("symbol").value;
+        const url = `https://${rapidApiHost}/query?function=TIME_SERIES_MONTHLY&symbol=${symbol}&datatype=json&output_size=compact`;
+
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': rapidApiKey,
+                'X-RapidAPI-Host': rapidApiHost
+            }
+        };
+
+        try {
+            const response = await fetch(url, requestOptions);
+            const data = await response.json();
+
+            let times = [];
+            let closes = [];
+
+            for (let time in data['Monthly Time Series']) {
+                times.push(time);
+                closes.push(data['Monthly Time Series'][time]['4. close']);
+            }
+            
+            //  Stocks Information:
+
+            const latestTime = times[0];
+            const latestData = data['Monthly Time Series'][latestTime];
+            const open = latestData['1. open'];
+            const high = latestData['2. high'];
+            const low = latestData['3. low'];
+            const close = latestData['4. close'];
+
+            document.getElementById("stockInfo").innerHTML = `
+                <h2><b>Stock Information</b></h2>
+                <ul>
+                    <li><b>Open:</b> ${open}</li>
+                    <li><b>High:</b> ${high}</li>
+                    <li><b>Low:</b> ${low}</li>
+                    <li><b>Close:</b> ${close}</li>
+                </ul>
+            `;
+
+            // Graphing using APEXCharting
+            
+            const lastRefreshed = new Date().toLocaleString();
+            document.getElementById("lastRefreshed").innerHTML = `Last Refreshed: ${lastRefreshed}`;
+
+            var chartOptions = {
+                series: [{
+                    name: 'Monthly Closed Stock Market Data',
+                    data: Object.keys(data['Monthly Time Series']).map(key => ({
+                        x: new Date(key),
+                        y: parseFloat(data['Monthly Time Series'][key]['4. close'])
+                    }))
+                }],
+                chart: {
+                    type: 'area',
+                    stacked: false,
+                    height: 350,
+                    zoom: {
+                        type: 'x',
+                        enabled: true,
+                        autoScaleYaxis: true
+                    },
+                    toolbar: {
+                        autoSelected: 'zoom'
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                markers: {
+                    size: 0,
+                },
+                title: {
+                    text: 'Stock Closed Price',
+                    align: 'left'
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: false,
+                        opacityFrom: 0.5,
+                        opacityTo: 0,
+                        stops: [0, 90, 100]
+                    },
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (val) {
+                            return (val).toFixed(2);
+                        },
+                    },
+                    title: {
+                        text: 'Price'
+                    },
+                },
+                xaxis: {
+                    type: 'datetime',
+                },
+                tooltip: {
+                    shared: false,
+                    x: {
+                        format: 'dd MMM yyyy'
+                    },
+                    y: {
+                        formatter: function (val) {
+                            return (val).toFixed(2);
+                        }
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#stockChart"), chartOptions);
+            chart.render();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+</script>

@@ -1,0 +1,137 @@
+---
+layout: project
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Data</title>
+  <!-- ApexCharts CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body>
+
+<div class="hero"></div>
+
+<label for="ticker">Select a stock:</label>
+<select id="ticker">
+    <option value="GOOGL">GOOGL</option>
+    <option value="AMZN">AMZN</option>
+    <option value="AAPL">AAPL</option>
+    <option value="TSLA">TSLA</option>
+    <option value="WMT">WMT</option>
+    <option value="MSFT">MSFT</option>
+    <option value="META">META</option>
+    <option value="COST">COST</option>
+    <option value="LMT">LMT</option>
+    <option value="NOC">NOC</option>
+    <option value="UNH">UNH</option>
+</select>
+<button onclick="getStockData()" class="btn">Get Monthly Data</button>
+
+<div class="card w-1/2 shadow-xl">
+  <div class="card-body">
+    <div id="chart"></div>
+  </div>
+</div>
+
+<script>
+  const rapidApiKey = 'a96f7bb54emshee5a698b2344228p12bd6cjsnbb7e0177bdb6'; // Replace 'your_rapid_api_key' with your actual RapidAPI Key
+  const rapidApiHost = 'alpha-vantage.p.rapidapi.com';
+
+  // Function to format data for ApexCharts
+  function formatDataForApexCharts(data) {
+    const lines = data.split('\n');
+    const formattedData = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const [index, date, value] = lines[i].split(',');
+      formattedData.push({
+        x: new Date(date).getTime(),
+        y: parseFloat(value)
+      });
+    }
+
+    return formattedData;
+  }
+
+  async function getStockData() {
+    const symbol = document.getElementById("ticker").value;
+    const url = `https://${rapidApiHost}/query?function=TIME_SERIES_MONTHLY&symbol=${symbol}&datatype=json&output_size=compact`;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': rapidApiKey,
+        'X-RapidAPI-Host': rapidApiHost
+      }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const alphaData = await response.json();
+
+      let alphaTimes = [];
+      let closes = [];
+
+      for (let time in alphaData['Monthly Time Series']) {
+        alphaTimes.push(time);
+        closes.push(parseFloat(alphaData['Monthly Time Series'][time]['4. close']));
+      }
+
+      alphaTimes.reverse();
+      closes.reverse();
+
+      // Fetch LSTM prediction data
+      const lstmResponse = await fetch(`http://localhost:8017/api/lstm/${symbol}`);
+      const lstmData = await lstmResponse.text();
+
+      // Format the LSTM prediction data for ApexCharts
+      const formattedLSTMData = formatDataForApexCharts(lstmData);
+
+      // Draw ApexCharts
+      var apexOptions = {
+        series: [
+          {
+            name: 'Alpha Vantage',
+            data: closes
+          },
+          {
+            name: 'LSTM Prediction',
+            data: formattedLSTMData // Use formatted LSTM data here
+          }
+        ],
+        chart: {
+          height: 350,
+          type: 'area'
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        xaxis: {
+          type: 'datetime',
+          categories: alphaTimes
+        },
+        tooltip: {
+          x: {
+            format: 'dd/MM/yy HH:mm'
+          },
+        },
+      };
+
+      var apexChart = new ApexCharts(document.querySelector("#chart"), apexOptions);
+      apexChart.render();
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+</script>
+
+</body>
+</html>
